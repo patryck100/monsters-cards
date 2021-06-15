@@ -66,7 +66,7 @@ class App extends Component {
     //console.log in this case shows up in the developer tool on the webpage to see how things are working out
     return (
       <div className="App">
-        <h1> Monsters Roladex </h1>
+        <h1> Monsters Cards </h1>
         <SearchBox
           placeholder="search monsters"
           handleChange={this.handleChange}
