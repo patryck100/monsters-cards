@@ -1,9 +1,51 @@
-import React, { Component } from "react";
+import React, { /* Component */ useState, useEffect } from "react";
 import { CardList } from "./components/card-list/card-list.component";
 import { SearchBox } from "./components/search-box/search-box.components";
 import "./App.css";
+import Footer from "./components/Footer/Footer";
 
-class App extends Component {
+const App = () => {
+  //using state
+  const [monsters, setMonsters] = useState([]);
+  const [searchField, setSearchField] = useState(""); //[value, setValue] = useState('initialValue')
+  const [filteredMonsters, setFilterMonsters] = useState(monsters); //by default it gets monster's value
+  console.log(searchField);
+
+  //Only runs this code the first time the whole app runs and if some value
+  //of the second argument of useEffect changes
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users") //fetching from this URL
+      .then((response) => response.json()) //converting response into json format
+      .then((users) => setMonsters(users)) //setting the values to our monsters
+      .catch((error) => console.log("Some problem while fetching the URL"));
+  }, []); //if no dependencies are placed it means it doesn't need to run again
+
+  useEffect(() => {
+    //create a new constant called filteredMonsters, which gets back a new array using the filter function with only the items which conditioning is true
+    //includes function is a boolean that validates whatever parameter if exist in an certain array
+    const newFilteredMonsters = monsters.filter((monster) => {
+      return monster.name.toLowerCase().includes(searchField);
+    });
+    setFilterMonsters(newFilteredMonsters);
+  }, [monsters, searchField]); //render this function whenever monsters or searchField changes
+
+  //when using arrow function "=>" it binds automatically, so "this" works
+  const handleChange = (e) => {
+    setSearchField( e.target.value.toLowerCase());
+  };
+
+  return (
+    <div className="App">
+      <h1 className="app-title"> Monsters Cards </h1>
+      <SearchBox placeholder="search monsters" handleChange={handleChange} />
+
+      <CardList monsters={filteredMonsters} />
+      <Footer />
+    </div>
+  );
+};
+
+/* class App extends Component {
   //creating a new component that will change the original state
   constructor() {
     super();
@@ -27,7 +69,7 @@ class App extends Component {
           name: 'Zombie',
           id: 'as1w'
         } 
-      ]*/
+      ]
     };
     //identifying "this" when calling from the handleChange method
     //another way is using arrow function "=>"
@@ -43,15 +85,15 @@ class App extends Component {
   }
   //when using arrow function "=>" it binds automatically, so "this" works
   handleChange = (e) => {
-    this.setState({ searchField: e.target.value })
-  }
+    this.setState({ searchField: e.target.value });
+  };
 
   render() {
     const { monsters, searchField } = this.state; //short way to do the below example
     /* 
     const monsters = this.state.monsters;
     const searchField = this.state.searchField;
-    */
+    
 
     //create a new constant called filteredMonsters, which gets back a new array using the filter function with only the items which conditioning is true
     //includes function is a boolean that validates whatever parameter if exist in an certain array
@@ -66,15 +108,16 @@ class App extends Component {
     //console.log in this case shows up in the developer tool on the webpage to see how things are working out
     return (
       <div className="App">
-        <h1> Monsters Cards </h1>
+        <h1 className="app-title"> Monsters Cards </h1>
         <SearchBox
           placeholder="search monsters"
           handleChange={this.handleChange}
         />
         <CardList monsters={filteredMonsters} />
+        <Footer />
       </div>
     );
   }
-}
+} */
 
 export default App;
